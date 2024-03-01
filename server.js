@@ -15,8 +15,8 @@ const swaggerUI = require('swagger-ui-express');
 dotenv.config({ path: './config/config.env' });
 connectDB();
 
-const hospitals = require('./routes/hospitals');
-const appointments = require('./routes/appointments');
+const restaurants = require('./routes/restaurants');
+const reserves = require('./routes/reserves');
 const auth = require('./routes/auth');
 const limiter=rateLimit({
     windowMs:10*60*1000,
@@ -52,12 +52,12 @@ app.use(hpp());
 app.use(cors());
 app.use(limiter);
 app.use('/api-docs',swaggerUI.serve, swaggerUI.setup(swaggerDocs));
-app.use('/api/v1/hospitals', hospitals);
+app.use('/api/v1/restaurants', restaurants);
 app.use('/api/v1/auth',auth);
-app.use('/api/v1/appointments',appointments);
+app.use('/api/v1/reserves',reserves);
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 const server = app.listen(PORT, console.log('Server running in', process.env.NODE_ENV, ' mode on port ', PORT));
 

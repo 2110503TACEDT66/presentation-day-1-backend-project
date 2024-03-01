@@ -28,7 +28,7 @@ const UserSchema = new mongoose.Schema({
     },
     tel:{
         type: String,
-        required: [true,'Please add a region']
+        required: [true,'Please add a telephone number']
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
