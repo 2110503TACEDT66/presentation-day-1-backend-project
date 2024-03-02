@@ -10,9 +10,9 @@ exports.getReserves=async (req,res,next) => {
             select:'name province tel'
         });
     }else{
-        if(req.params.hospitalId){
-            console.log(req.params.hospitalId);
-            query=Reserve.find({restaurant: req.params.hospitalId}).populate({
+        if(req.params.reserveId){
+            console.log(req.params.reserveId);
+            query=Reserve.find({restaurant: req.params.reserveId}).populate({
                 path:'restaurant',
                 select:'name province tel'
             });
@@ -62,12 +62,12 @@ exports.getReserve=async (req,res,next) => {
 
 exports.addReserve=async(req,res,next) => {
     try{
-        req.body.restaurant=req.params.hospitalId;
+        req.body.restaurant=req.params.reserveId;
 
-        const restaurant= await Restaurant.findById(req.params.hospitalId);
+        const restaurant= await Restaurant.findById(req.params.reserveId);
 
         if(!restaurant){
-            return res.status(404).json({success:false,message:`No restaurant with the id of ${req.params.hospitalId}`});
+            return res.status(404).json({success:false,message:`No restaurant with the id of ${req.params.reserveId}`});
         }
         req.body.user=req.user.id;
         const existedReserve=await Reserve.find({user:req.user.id});
