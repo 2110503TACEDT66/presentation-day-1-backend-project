@@ -174,7 +174,7 @@ const swaggerJSDoc = require('swagger-jsdoc');
 *               404:
 *                   description: The restaurant was not found
 */
-router.use('/:hospitalId/reserves',reserveRouter);
+router.use('/:resterantId/reserves',reserveRouter);
 
 router.route('/vacCenters').get(getVacCenters);
 router.route('/').get(getRestaurants).post(protect,authorize('admin'),createRestaurant);
