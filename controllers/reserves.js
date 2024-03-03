@@ -41,17 +41,20 @@ exports.getReserves=async (req,res,next) => {
 exports.getReserve=async (req,res,next) => {
     try{
         const reserve = await Reserve.findById(req.params.id).populate({
-            path: 'restaurant',
+            path: 'hospital',
             select: 'name description tel'
         });
 
-        if(!reserve){
-            return res.status(404).json({success:false,message:`No reserve with the id of ${req.params.id}`});
+        if(!reverse){
+            return res.status(404).json({success:false, message: `No reverse with the id of ${req.params.id}`});
+        }
+        if(reverse.user.toString!=req.user.id  && req.user.role !== 'admin' ){
+            return res.status(404).json({success:false, message: `Cannot get this reverse with the id of ${req.params.id}`});
         }
 
         res.status(200).json({
-            success:true,
-            data: reserve
+            success: true,
+            data: appointment
         });
 
     }catch(error){
@@ -69,6 +72,7 @@ exports.addReserve=async(req,res,next) => {
         if(!restaurant){
             return res.status(404).json({success:false,message:`No restaurant with the id of ${req.params.hospitalId}`});
         }
+
         req.body.user=req.user.id;
         const existedReserve=await Reserve.find({user:req.user.id});
 
@@ -78,6 +82,7 @@ exports.addReserve=async(req,res,next) => {
         const reserve = await Reserve.create(req.body);
         res.status(200).json({success:true,data:reserve});
 
+        
     }catch(error){
         console.log(error);
         return res.status(500).json({success:false,message:"Cannot create Reserve"});
