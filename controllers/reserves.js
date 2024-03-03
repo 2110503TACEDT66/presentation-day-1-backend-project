@@ -41,7 +41,7 @@ exports.getReserves=async (req,res,next) => {
 exports.getReserve=async (req,res,next) => {
     try{
         const reserve = await Reserve.findById(req.params.id).populate({
-            path: 'hospital',
+            path: 'restaurant',
             select: 'name description tel'
         });
 
@@ -54,7 +54,7 @@ exports.getReserve=async (req,res,next) => {
 
         res.status(200).json({
             success: true,
-            data: appointment
+            data: reserve
         });
 
     }catch(error){
