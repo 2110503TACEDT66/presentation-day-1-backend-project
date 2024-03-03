@@ -1,5 +1,5 @@
 const express = require('express');
-const {getRestaurants , getRestaurant , createRestaurant , updateRestaurant , deleteRestaurant , getVacCenters} = require('../controllers/restaurants');
+const {getRestaurants , getRestaurant , createRestaurant , updateRestaurant , deleteRestaurant } = require('../controllers/restaurants');
 
 const reserveRouter=require('./reserves')
 const router = express.Router();
