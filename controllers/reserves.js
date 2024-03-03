@@ -45,11 +45,11 @@ exports.getReserve=async (req,res,next) => {
             select: 'name description tel'
         });
 
-        if(!reverse){
-            return res.status(404).json({success:false, message: `No reverse with the id of ${req.params.id}`});
+        if(!reserve){
+            return res.status(404).json({success:false, message: `No reserse with the id of ${req.params.id}`});
         }
-        if(reverse.user.toString() !== req.user.id  && req.user.role !== 'admin' ){
-            return res.status(404).json({success:false, message: `Cannot get this reverse with the id of ${req.params.id}`});
+        if(reserve.user.toString() !== req.user.id  && req.user.role !== 'admin' ){
+            return res.status(404).json({success:false, message: `Cannot get this reserse with the id of ${req.params.id}`});
         }
 
         res.status(200).json({
