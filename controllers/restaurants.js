@@ -1,5 +1,5 @@
 const Restaurant = require('../models/Restaurant');
-const vacCenter = require('../models/VacCenter')
+
 
 //@desc Getall restaurant
 //@route GET /api/v1/restaurants

@@ -176,7 +176,7 @@ const swaggerJSDoc = require('swagger-jsdoc');
 */
 router.use('/:resterantId/reserves',reserveRouter);
 
-router.route('/vacCenters').get(getVacCenters);
+
 router.route('/').get(getRestaurants).post(protect,authorize('admin'),createRestaurant);
 router.route('/:id').get(getRestaurant).put(protect,authorize('admin'),updateRestaurant).delete(protect,authorize('admin'),deleteRestaurant);
 
