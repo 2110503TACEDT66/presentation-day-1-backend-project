@@ -48,7 +48,7 @@ exports.getReserve=async (req,res,next) => {
         if(!reverse){
             return res.status(404).json({success:false, message: `No reverse with the id of ${req.params.id}`});
         }
-        if(reverse.user.toString!=req.user.id  && req.user.role !== 'admin' ){
+        if(reverse.user.toString() !== req.user.id  && req.user.role !== 'admin' ){
             return res.status(404).json({success:false, message: `Cannot get this reverse with the id of ${req.params.id}`});
         }
 
