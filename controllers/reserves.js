@@ -65,12 +65,12 @@ exports.getReserve=async (req,res,next) => {
 
 exports.addReserve=async(req,res,next) => {
     try{
-        req.body.restaurant=req.params.reserveId;
+        req.body.restaurant=req.params.resterantId;
 
-        const restaurant= await Restaurant.findById(req.params.reserveId);
+        const restaurant= await Restaurant.findById(req.params.resterantId);
 
         if(!restaurant){
-            return res.status(404).json({success:false,message:`No restaurant with the id of ${req.params.reserveId}`});
+            return res.status(404).json({success:false,message:`No restaurant with the id of ${req.params.resterantId}`});
         }
 
         req.body.user=req.user.id;
@@ -135,5 +135,24 @@ exports.deleteReserve=async (req,res,next)=>{
     }catch(error){
         console.log(error);
         return res.status(500).json({success:false,message:"Cannot delete Reserve"});
+    }
+}
+
+exports.deleteAllReserve = async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const deleteResult = await Reserve.deleteMany({ user: userId });
+
+        if (deleteResult.deletedCount === 0) {
+            return res.status(404).json({ success: false, message: `No reserves found for user with ID ${userId}` });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: `Successfully deleted ${deleteResult.deletedCount} reserves for user with ID ${userId}`
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ success: false, message: "Cannot delete reserves" });
     }
 }
