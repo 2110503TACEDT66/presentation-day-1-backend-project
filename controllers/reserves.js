@@ -65,12 +65,12 @@ exports.getReserve=async (req,res,next) => {
 
 exports.addReserve=async(req,res,next) => {
     try{
-        req.body.restaurant=req.params.reserveId;
+        req.body.restaurant=req.params.restaurantId;
 
-        const restaurant= await Restaurant.findById(req.params.reserveId);
+        const restaurant= await Restaurant.findById(req.params.restaurantId);
 
         if(!restaurant){
-            return res.status(404).json({success:false,message:`No restaurant with the id of ${req.params.reserveId}`});
+            return res.status(404).json({success:false,message:`No restaurant with the id of ${req.params.restaurantId}`});
         }
 
         req.body.user=req.user.id;
