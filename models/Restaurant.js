@@ -45,9 +45,12 @@ const RestaurantSchema = new mongoose.Schema({
     // dayOfWeek: { type: String, required: true , enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] },
     // opens: { type: String, required: true },
     // closes: { type: String, required: true }
- 
-        
-    ]
+  
+    ],
+    table: [{
+        type: String,
+        require: true
+    }]
 },{
     toJSON:{virtuals:true},
     toObject:{virtuals:true}
