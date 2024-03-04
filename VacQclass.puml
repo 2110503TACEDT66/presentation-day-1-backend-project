@@ -1,0 +1,93 @@
+@startuml
+left to right direction
+package "Restaurant"{
+    class "<<Application>>\nRestaurant" as Restaurants{}
+
+    class "<<Resource>>\nRestaurants" as ResourceRestaurants{
+        <<GET>> +getRestaurants():Restaurant
+        <<POST>> +createRestaurant():Restaurant
+    }
+    
+    class "<<Resource>>\nRestaurant" as ResourceRestaurant {
+        <<GET>> +getRestaurant(): Restaurant
+        <<PUT>> +updateRestaurant(): Restaurant
+        <<DELETE>> +deleteRestaurant(): void
+    }
+
+    class "<<Resource>>\nReserves" as ResourceReserves {
+        <<GET>> +getReserves(): Reserve
+        <<POST>> +addReserve(): Reserve
+        <<DELETE>> +deleteAllReserves(): void
+    }
+
+    class "<<Resource>>\nReserve" as ResourceReserve {
+        <<GET>> +getReserve(): Reserve
+        <<PUT>> +updateReserve(): Reserve
+        <<DELETE>> +deleteReserve(): void
+    }
+
+    class "<<Resource>>\nregister" as ResourceRegister {
+        <<POST>> +register(): User
+    }
+
+    class "<<Resource>>\nlogin" as ResourceLogin {
+        <<POST>> +login(): User
+    }
+
+    class "<<Resource>>\nme" as ResourceMe {
+        <<GET>> +getme(): User
+    }
+
+    class "<<Resource>>\nlogout" as ResourceLogout {
+        <<GET>> +logout(): User
+    }
+
+    class "<<Representation>>\nRestaurant" as RepresentationRestaurant {
+        -name
+        -address
+        -district
+        -province
+        -postalcode
+        -telephone
+        -region
+        -openingHours
+    }
+
+    class "<<Representation>>\nReserve" as RepresentationReserve {
+        -apptDate
+        -user
+        -restaurant
+        -createAt
+    }
+
+    class "<<Representation>>\nUser" as RepresentationUser {
+        -name
+        -email
+        -role
+        -password
+        -tel
+        -createAt
+    }
+
+}
+
+Restaurants ..> ResourceRestaurants:"/restaurant\n<<Path>>"
+ResourceRestaurants ..> ResourceRestaurant: "/{restuarantId}\n<<Path>>"
+ResourceRestaurant ..> RepresentationRestaurant: "<<use>>"
+
+ResourceRestaurant ..> ResourceReserves:"/reserves\n<<Path>>"
+Restaurants ..> ResourceReserves:"/reserves\n<<Path>>"
+ResourceReserves ..> ResourceReserve: "/{reserveId}\n<<Path>>"
+ResourceReserve ..> RepresentationReserve: "<<use>>"
+
+Restaurants ..> ResourceRegister:"/auth/register\n<<Path>>"
+Restaurants ..> ResourceLogin:"/auth/login\n<<Path>>"
+Restaurants ..> ResourceMe:"/auth/me\n<<Path>>"
+Restaurants ..> ResourceLogout:"/auth/logout\n<<Path>>"
+
+ResourceRegister ..> RepresentationUser: "<<use>>" 
+ResourceLogin ..> RepresentationUser: "<<use>>"
+ResourceMe ..> RepresentationUser: "<<use>>"
+ResourceLogout ..> RepresentationUser: "<<use>>"
+
+@enduml

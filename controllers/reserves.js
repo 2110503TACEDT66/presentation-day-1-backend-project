@@ -73,6 +73,7 @@ exports.addReserve=async(req,res,next) => {
             return res.status(404).json({success:false,message:`No restaurant with the id of ${req.params.resterantId}`});
         }
 
+
         req.body.user=req.user.id;
         const existedReserve=await Reserve.find({user:req.user.id});
         
@@ -80,6 +81,15 @@ exports.addReserve=async(req,res,next) => {
             return res.status(400).json({success:false,message:`The user with ID ${req.user.id} has already made 3 reserves`});
         }
         const reserve = await Reserve.create(req.body);
+
+        const tablenum = req.body.table;
+        const tableIndex = restaurant.table.indexOf(tablenum);
+        if (tableIndex === -1) {
+    
+            return res.status(400).json({success:false,message:`Table with name '${tablenum}' not found/already reserved in restaurant '${restaurant.name}'.`});
+        }
+        restaurant.table.splice(tableIndex, 1);
+        await restaurant.save();
         res.status(200).json({success:true,data:reserve});
 
         
@@ -121,11 +131,14 @@ exports.deleteReserve=async (req,res,next)=>{
         if(!reserve){
             return res.status(404).json({success:false,message:`No reserve with the id of ${req.params.id}`});
         }
-
+        const restaurant = await Restaurant.findById(reserve.restaurant);
+        
         if(reserve.user.toString() !== req.user.id && req.user.role !== 'admin'){
             return res.status(401).json({success:false,message:`User ${req.user.id} is not authorized to delete this bootcamp`})
         }
 
+        restaurant.table.push(reserve.table);
+        await restaurant.save();
         await reserve.deleteOne();
 
         res.status(200).json({
@@ -141,10 +154,21 @@ exports.deleteReserve=async (req,res,next)=>{
 exports.deleteAllReserve = async (req, res, next) => {
     try {
         const userId = req.user.id;
+        
+        const reservesToDelete = await Reserve.find({ user: req.user.id });
         const deleteResult = await Reserve.deleteMany({ user: userId });
 
         if (deleteResult.deletedCount === 0) {
             return res.status(404).json({ success: false, message: `No reserves found for user with ID ${userId}` });
+        }
+        
+
+        for (const reserve of reservesToDelete) {
+            const restaurant = await Restaurant.findById(reserve.restaurant);
+            if (restaurant) {
+                restaurant.table.push(reserve.table);
+                await restaurant.save();
+            }
         }
 
         res.status(200).json({

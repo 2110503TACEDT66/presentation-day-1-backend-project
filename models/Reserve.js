@@ -16,6 +16,10 @@ const ReserveSchema = new mongoose.Schema({
         ref: 'Restaurant',
         require: true
     },
+    table:{
+        type: String,
+        require: true
+    },
     createAt: {
         type: Date,
         default: Date.now
