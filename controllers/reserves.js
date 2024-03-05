@@ -10,9 +10,9 @@ exports.getReserves=async (req,res,next) => {
             select:'name province tel'
         });
     }else{
-        if(req.params.reserveId){
-            console.log(req.params.reserveId);
-            query=Reserve.find({restaurant: req.params.reserveId}).populate({
+        if(req.params.restaurantId){
+            console.log(req.params.restaurantId);
+            query=Reserve.find({restaurant: req.params.restaurantId}).populate({
                 path:'restaurant',
                 select:'name province tel'
             });
