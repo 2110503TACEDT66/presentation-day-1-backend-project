@@ -15,7 +15,6 @@ GET : http://localhost:5000/api/v1/reserves
 
 AddReserve
 POST : http://localhost:5000/api/v1/restaurants/:restuarantId/reserves
-Example of reqbody: 
 
 GetAvailableTable
 GET : http://localhost:5000/api/v1/restaurants/:resterantId/table
