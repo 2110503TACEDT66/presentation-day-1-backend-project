@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 const Restaurant = require('./Restaurant');
 
 const ReserveSchema = new mongoose.Schema({
-    apptDate: {
+    start: {
+        type: Date,
+        require:true
+    },
+    end: {
         type: Date,
         require:true
     },
