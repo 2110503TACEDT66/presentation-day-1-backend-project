@@ -8,6 +8,12 @@ const RestaurantSchema = new mongoose.Schema({
         trim:true,
         maxlength:[50,'Name can not be more than 50 characters']
     },
+    picture: {
+        type: String,
+        required: [true,'Please add a picture'],
+        unique: true,
+        trim:true,
+    },
     address:{
         type: String,
         required: [true,'Please add an address']
@@ -48,8 +54,12 @@ const RestaurantSchema = new mongoose.Schema({
   
     ],
     table: [{
-        type: String,
-        require: true
+        tableNumber: { type: String, required: true },
+        capacity: { type: Number, required: true },
+        timeSlots: [{
+            start: { type: String, required: false },
+            end: { type: String, required: false }
+        }]
     }]
 },{
     toJSON:{virtuals:true},

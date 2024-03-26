@@ -65,12 +65,12 @@ exports.getReserve=async (req,res,next) => {
 
 exports.addReserve=async(req,res,next) => {
     try{
-        req.body.restaurant=req.params.resterantId;
+        req.body.restaurant=req.params.restaurantId;
 
-        const restaurant= await Restaurant.findById(req.params.resterantId);
+        const restaurant= await Restaurant.findById(req.params.restaurantId);
 
         if(!restaurant){
-            return res.status(404).json({success:false,message:`No restaurant with the id of ${req.params.resterantId}`});
+            return res.status(404).json({success:false,message:`No restaurant with the id of ${req.params.restuarantId}`});
         }
 
 
@@ -83,13 +83,17 @@ exports.addReserve=async(req,res,next) => {
         const reserve = await Reserve.create(req.body);
 
         const tablenum = req.body.table;
-        const tableIndex = restaurant.table.indexOf(tablenum);
-        if (tableIndex === -1) {
-    
-            return res.status(400).json({success:false,message:`Table with name '${tablenum}' not found/already reserved in restaurant '${restaurant.name}'.`});
+        
+        const newTimeSlot = { start: req.body.start, end: req.body.end }; 
+        const targetTableNumber = req.body.table;
+        const targetTable = restaurant.table.find(table => table.tableNumber === targetTableNumber);
+        if (targetTable) {
+            targetTable.timeSlots.push(newTimeSlot);
+            await restaurant.save();
+        } else {
+            return res.status(200).json({success:true,data:"Table not found"});
         }
-        restaurant.table.splice(tableIndex, 1);
-        await restaurant.save();
+
         res.status(200).json({success:true,data:reserve});
 
         
