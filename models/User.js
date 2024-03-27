@@ -22,26 +22,40 @@ const UserSchema = new mongoose.Schema({
     },
     password:{
         type:String,
-        required:[true,'Please add a password'],
         minlength:6,
         select: false
     },
     tel:{
         type: String,
-        required: [true,'Please add a telephone number']
+        default: null
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
     createAt:{
         type:Date,
         default:Date.now
+    },
+    isGoogleAccount: {
+        type:Boolean,
+        default:false
     }
 
 });
 
-UserSchema.pre('save',async function(next){
-    const salt=await bcrypt.genSalt(10);
-    this.password=await bcrypt.hash(this.password,salt);
+UserSchema.pre('save', async function (next) {
+    if (!this.isGoogleAccount) {
+        // this.isGoogleAccount = true;
+        console.log("Password:", this.password); 
+        console.log("Email:", this.email);
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+    } else if (this.isGoogleAccount) {
+        console.log("Password: eiei", this.password);
+        console.log("Email: eiei", this.email);
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.email, salt);
+    }
+    next();
 });
 
 UserSchema.methods.getSignedJwtToken=function(){
