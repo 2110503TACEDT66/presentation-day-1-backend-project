@@ -1,5 +1,6 @@
 const Reserve = require('../models/Reserve');
 const Restaurant = require('../models/Restaurant');
+const User = require('../models/User');
 
 exports.getReserves=async (req,res,next) => {
     let query;
@@ -21,19 +22,30 @@ exports.getReserves=async (req,res,next) => {
                 path:'restaurant',
                 select:'name province tel'
             });
+            
         
     }
 
     try {
         const reserves=await query; 
+        const reservesWithUserName = await Promise.all(reserves.map(async reserve => {
+            // Find the user's name based on the user id in the reservation
+            const user = await User.findById(reserve.user);
+            console.log(user)
+            const userName = user ? user.name : 'eiei';
+            // Return the reservation with the user's name attached
+            return {
+                ...reserve._doc,
+                userName: userName
+            };
+        }));
 
         res.status(200).json({
-            success:true,
-            count:reserves.length,
-            data:reserves
+            success: true,
+            count: reservesWithUserName.length,
+            data: reservesWithUserName
         });
     }catch(err){
-        console.log(err);
         return res.status(500).json({success:false,message:"Cannot find Reserve"});
     }
 };

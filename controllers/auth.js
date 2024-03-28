@@ -22,9 +22,10 @@ exports.register = async(req,res,next) => {
 
 exports.login=async (req,res,next) => {
 try{
-
-    const {email,password} = req.body;
-    if(req.body.provider ) {
+    // console.log(req)
+    const {email,password,provider} = req.body;
+    console.log(email,password,provider)
+    if(provider) {
         if(req.body.provider === 'google') {
             const user = await User.findOne({email: email})
             if(!user) {
@@ -36,6 +37,7 @@ try{
         }
     }
     if(!email || !password){
+        
         return res.status(400).json({success:false,msg:'Please provide an email and password'});
     }
 
@@ -54,6 +56,10 @@ try{
     // const token=user.getSignedJwtToken();
     // res.status(200).json({success:true,token});
     sendTokenResponse(user,200,res);
+    // if (user) {
+    //     sendTokenResponse(user, 200, res);
+    //     return; // Add this line to stop further execution
+    // }
 }catch(err){
     return res.status(401).json({success:false,msg:"Cannot convert email or password to string"});
 }
@@ -61,7 +67,7 @@ try{
 
 const sendTokenResponse=(user,statusCode,res) => {
     const token=user.getSignedJwtToken();
-    console.log(token);
+    // console.log(token);
 
     const options = {
         expires:new Date(Date.now()+process.env.JWT_COOKIE_EXPIRE*24*60*60*1000),
@@ -81,7 +87,17 @@ const sendTokenResponse=(user,statusCode,res) => {
     })
 }
 exports.getMe= async(req,res,next) => {
-    const user=await User.findById(req.user.id);
+    console.log(req.body)
+    if(req.body && req.body.id) {
+        const user = await User.findById(req.body.id)
+        if(user) {
+            return sendTokenResponse(user,200,res)
+        } else {
+            return res.status(400).json({success:false,msg:'Cannot find user'})
+        }
+    }
+    
+    const user= await User.findById(req.user.id);
     res.status(200).json({
         success:true,
         data:user
